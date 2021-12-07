@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>throttle</title>
+</head>
+<body>
+  <div style="height:150px;line-height: 150px;background-color: #ccc;color: #fff;text-align: center;font-size: 80px;"></div>
+  <script>
+    let num = 1
+    let conent = document.querySelector('div')
+    function count() {
+      conent.innerHTML = num++
+    }
+    function throttle(func,wait) {
+      let previous = 0
+      return function() {
+        let now = Date.now()
+        let context = this
+        let args = arguments
+        if(now - previous > wait) {
+          func.apply(context,args)
+          previous = now
+        }
+      }
+    }
+    conent.onmousemove = throttle(count,1000)
+  </script>
+</body>
+</html>

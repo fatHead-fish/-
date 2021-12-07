@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>debounce</title>
+</head>
+<body>
+  <div style="height:150px;line-height: 150px;background-color: #ccc;color: #fff;text-align: center;font-size: 80px;"></div>
+  <script>
+    let num = 1
+    let conent = document.querySelector('div')
+    function count() {
+      conent.innerHTML = num++
+    }
+    // conent.onmousemove = count
+    // 非立即执行版本
+    function debounce(func, wait) {
+      let timeout;
+      return function () {
+        let context = this;//div
+        let args = arguments;//MouseEvent
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func.apply(context, args)
+        }, wait);
+      }
+    }
+    // 立即执行版：
+    function debounceNow(func,wait) {
+      let timeout
+      return function() {
+        let context = this
+        let args = arguments
+        if(timeout) clearTimeout(timeout)
+        let callNow = !timeout
+        timeout = setTimeout(_ => {
+          timeout = null
+        },wait)
+        if(callNow) func.apply(context,args)
+      }
+    }
+    /**
+     * @desc 函数防抖
+     * @param func 函数
+     * @param wait 延迟执行毫秒数
+     * @param immediate  true 表立即执行 false表非立即执行
+    */
+    function debounce(func,wait,immediate) {
+      let timeout
+      return function() {
+        let context = this
+        let args = arguments
+        if(timeout) clearTimeout(timeout)
+        if(immediate) {
+          var callNow = !timeout
+          timeout = setTimeout(_ => {
+            timeout = null
+          },wait)
+          if(callNow) func.apply(context,args)
+        }else {
+          timeout = setTimeout(function() {
+            func.apply(context,args)
+          },wait)
+        }
+      }
+    }
+    conent.onmousemove = debounceNow(count,1000)
+    conent.onmousemove = debounce(count,1000)
+  </script>
+</body>
+</html>
